@@ -1,4 +1,5 @@
 import pyautogui
+import pyperclip
 import time
 import keyboard
 import sys
@@ -8,7 +9,7 @@ COORD_A = (958, 519)  #開盒
 COORD_B = (1269, 228) #按住Shift移動綠寶
 
 # 設定每個 pyautogui 指令之間的預設延遲 (秒)
-pyautogui.PAUSE = 0.5
+pyautogui.PAUSE = 0.3
 
 # 避免死循環導致無法正確存入綠寶，加入全局變數來控制循環狀態
 target_x, target_y = 958, 226
@@ -36,24 +37,23 @@ def run_script():
     print("=== Depositor 已啟動 ===")
     print("提示：隨時按下 'Esc' 鍵可立即停止腳本。")
 
-    print("正在等待 5 秒，請切換到遊戲畫面...")
+    # 等待 5 秒，讓使用者有時間切換到目標應用程式
+    print("正在等待 5 秒...")
     safe_sleep(5)
-    
-    loop_count = 0
     
     try:
         while True:
             check_exit()
-            print(f"1. 右鍵點擊座標 A: {COORD_A}")
+            print(f"1. 右鍵點擊座標 A: {COORD_A} 打開界伏盒")
             pyautogui.rightClick(COORD_A[0], COORD_A[1])
 
             # 保險機制
-            print("正在記錄 A 時間點的顏色...")
+            print(f"正在記錄 A 時間點的顏色...")
             variable_A = pyautogui.pixel(target_x, target_y)
             print(f"變數 A (RGB): {variable_A}")
 
             check_exit()
-            print(f"2. 按住 Shift 點擊座標 B: {COORD_B}")
+            print(f"3. 按住 Shift 點擊座標 B: {COORD_B}, 把綠寶石移到背包中")
             # 先將滑鼠移到目標位置，避免移動中點擊失誤
             pyautogui.moveTo(COORD_B[0], COORD_B[1], duration=0.2)
             safe_sleep(0.1)
@@ -71,30 +71,27 @@ def run_script():
             # 如果是，則必須按下 "e" 鍵關閉背包
             print("正在檢查 B 時間點的顏色是否接近 A...")
             if pyautogui.pixelMatchesColor(target_x, target_y, variable_A, tolerance=10):
+                print("B 時間點的顏色接近 A，按下 'e' 鍵跳出界面")
                 pyautogui.press('e')
 
             check_exit()
-            print("3. 輸入 '/'")
+            print("4. 輸入 '/'")
             pyautogui.press('/')
 
             check_exit()
-            print("4. 輸入 'moneysave'")
-            pyautogui.press('m')
-            pyautogui.press('o')
-            pyautogui.press('n')
-            pyautogui.press('e')
-            pyautogui.press('y')
-            pyautogui.press('s')
-            pyautogui.press('a')
-            pyautogui.press('v')
-            pyautogui.press('e')
+            print("貼上 'moneysave'")
+            pyperclip.copy("moneysave")
+            safe_sleep(0.1)
+            pyautogui.hotkey('ctrl', 'v')
+            safe_sleep(0.1)
 
+            # 按下 "enter"
             check_exit()
             print("5. 按下 'Enter'")
             pyautogui.press('enter')
-            time.sleep(0.1)
+            safe_sleep(0.1)
 
-            print("正在記錄 B 時間點的顏色...")
+            print(f"正在記錄 B 時間點的顏色...")
             variable_B = pyautogui.pixel(target_x, target_y)
             print(f"變數 B (RGB): {variable_B}")
             
