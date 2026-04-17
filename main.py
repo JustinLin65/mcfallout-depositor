@@ -5,9 +5,8 @@ import keyboard
 import sys
 
 # --- 設定座標 (請根據你的螢幕解析度修改) ---
-COORD_A = (958, 519)  #開盒
-COORD_B = (1269, 228) #按住Shift移動綠寶
-
+COORD_BATCH_MOVE = (1269, 228) #點擊模組的批量移動鈕
+   
 # 設定每個 pyautogui 指令之間的預設延遲 (秒)
 pyautogui.PAUSE = 0.3
 
@@ -36,27 +35,25 @@ def run_script():
 
     print("=== Depositor 已啟動 ===")
     print("提示：隨時按下 'Esc' 鍵可立即停止腳本。")
-
-    # 等待 5 秒，讓使用者有時間切換到目標應用程式
-    print("正在等待 5 秒...")
-    safe_sleep(5)
     
+    print("正在等待 5 秒，請將準星對準界伏盒...")
+    safe_sleep(5)
+
     try:
         while True:
             check_exit()
-            print(f"1. 右鍵點擊座標 A: {COORD_A} 打開界伏盒")
-            pyautogui.rightClick(COORD_A[0], COORD_A[1])
+            print("1. 右鍵點擊開啟界伏盒")
+            pyautogui.rightClick()
 
             # 保險機制
-            print(f"正在記錄 A 時間點的顏色...")
+            print("2. 正在記錄 A 時間點的顏色...")
             variable_A = pyautogui.pixel(target_x, target_y)
             print(f"變數 A (RGB): {variable_A}")
-
+            
             check_exit()
-            print(f"3. 按住 Shift 點擊座標 B: {COORD_B}, 把綠寶石移到背包中")
+            print(f"3. 點擊批量移動鈕: {COORD_BATCH_MOVE}")
             # 先將滑鼠移到目標位置，避免移動中點擊失誤
-            pyautogui.moveTo(COORD_B[0], COORD_B[1], duration=0.2)
-            safe_sleep(0.1)
+            pyautogui.moveTo(COORD_BATCH_MOVE[0], COORD_BATCH_MOVE[1], duration=0.2)
 
             # 依序執行組合動作
             pyautogui.keyDown('shift')
@@ -73,7 +70,7 @@ def run_script():
             if pyautogui.pixelMatchesColor(target_x, target_y, variable_A, tolerance=10):
                 print("B 時間點的顏色接近 A，按下 'e' 鍵跳出界面")
                 pyautogui.press('e')
-
+            
             check_exit()
             print("4. 輸入 '/'")
             pyautogui.press('/')

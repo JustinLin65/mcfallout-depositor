@@ -25,8 +25,8 @@ pip install -r requirements.txt
 
 在使用前，請先根據您的螢幕解析度調整 `main.py` 內的座標：
 
-- `COORD_A`：界伏盒的開盒位置。
-- `COORD_B`：綠寶石在背包中的位置。
+- **無需設定開盒座標**：腳本會直接在您的準星位置進行右鍵點擊。
+- `COORD_BATCH_MOVE`：點擊模組「批量移動」按鈕的座標（原 `COORD_B`）。
 - `target_x, target_y`：保險機制監控像素點。
 
 ## 啟動
