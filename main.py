@@ -4,9 +4,8 @@ import keyboard
 import sys
 
 # --- 設定座標 (請根據你的螢幕解析度修改) ---
-COORD_A = (958, 519) #開盒
+COORD_A = (958, 519)  #開盒
 COORD_B = (1269, 228) #按住Shift移動綠寶
-COORD_C = (1180, 327) #存入所有綠寶
 
 # 設定每個 pyautogui 指令之間的預設延遲 (秒)
 pyautogui.PAUSE = 0.5
@@ -36,7 +35,7 @@ def run_script():
     
     try:
         while True:
-            print("1. 等待 5 秒，請切換到遊戲畫面...")
+            print("1. 正在等待 5 秒，請切換到遊戲畫面...")
             safe_sleep(5)
 
             check_exit()
@@ -49,6 +48,7 @@ def run_script():
             pyautogui.moveTo(COORD_B[0], COORD_B[1], duration=0.2)
             safe_sleep(0.1)
             
+            # 依序執行組合動作
             pyautogui.keyDown('shift')
             safe_sleep(0.1)           # 等待系統辨識 Shift
             pyautogui.mouseDown()     # 按下鼠標左鍵
@@ -63,30 +63,21 @@ def run_script():
             pyautogui.press('/')
 
             check_exit()
-            print("5. 輸入 'bank'")
-            pyautogui.press('b')
-            pyautogui.press('a')
+            print("5. 輸入 'moneysave'")
+            pyautogui.press('m')
+            pyautogui.press('o')
             pyautogui.press('n')
-            pyautogui.press('k')
+            pyautogui.press('e')
+            pyautogui.press('y')
+            pyautogui.press('s')
+            pyautogui.press('a')
+            pyautogui.press('v')
+            pyautogui.press('e')
 
             check_exit()
             print("6. 按下 'Enter'")
             pyautogui.press('enter')
-            safe_sleep(0.3)
-
-            # 7. 點擊座標 C
-            check_exit()
-            print(f"7. 點擊座標 C: {COORD_C}")
-            pyautogui.moveTo(COORD_C[0], COORD_C[1], duration=0.3)
-            safe_sleep(0.5)
-            pyautogui.mouseDown()     # 按下鼠標左鍵
-            safe_sleep(0.1)           # 保持按下一小段時間
-            pyautogui.mouseUp()       # 放開鼠標左鍵
-            safe_sleep(0.1)           # 確保點擊動作完成
-
-            check_exit()
-            print("8. 按下 'e' 關閉銀行介面")
-            pyautogui.press('e')
+            safe_sleep(0.1)
             
             safe_sleep(0.3)
 
