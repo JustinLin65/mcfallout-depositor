@@ -10,6 +10,11 @@ COORD_B = (1269, 228) #按住Shift移動綠寶
 # 設定每個 pyautogui 指令之間的預設延遲 (秒)
 pyautogui.PAUSE = 0.5
 
+# 避免死循環導致無法正確存入綠寶，加入全局變數來控制循環狀態
+target_x, target_y = 958, 226
+variable_A, variable_B = (0, 0, 0), (0, 0, 0)
+
+
 def check_exit():
     """檢查是否按下了 Esc 鍵，若是則立即退出程式"""
     if keyboard.is_pressed('esc'):
@@ -30,24 +35,29 @@ def run_script():
 
     print("=== Depositor 已啟動 ===")
     print("提示：隨時按下 'Esc' 鍵可立即停止腳本。")
+
+    print("正在等待 5 秒，請切換到遊戲畫面...")
+    safe_sleep(5)
     
     loop_count = 0
     
     try:
         while True:
-            print("1. 正在等待 5 秒，請切換到遊戲畫面...")
-            safe_sleep(5)
-
             check_exit()
-            print(f"2. 右鍵點擊座標 A: {COORD_A}")
+            print(f"1. 右鍵點擊座標 A: {COORD_A}")
             pyautogui.rightClick(COORD_A[0], COORD_A[1])
 
+            # 保險機制
+            print("正在記錄 A 時間點的顏色...")
+            variable_A = pyautogui.pixel(target_x, target_y)
+            print(f"變數 A (RGB): {variable_A}")
+
             check_exit()
-            print(f"3. 按住 Shift 點擊座標 B: {COORD_B}")
+            print(f"2. 按住 Shift 點擊座標 B: {COORD_B}")
             # 先將滑鼠移到目標位置，避免移動中點擊失誤
             pyautogui.moveTo(COORD_B[0], COORD_B[1], duration=0.2)
             safe_sleep(0.1)
-            
+
             # 依序執行組合動作
             pyautogui.keyDown('shift')
             safe_sleep(0.1)           # 等待系統辨識 Shift
@@ -56,14 +66,19 @@ def run_script():
             pyautogui.mouseUp()       # 放開鼠標左鍵
             safe_sleep(0.1)           # 確保點擊動作完成
             pyautogui.keyUp('shift')
-            safe_sleep(0.1)
+
+            # 檢查 B 時間點的顏色是否「接近」變數 A，允許 10 度的色差 (tolerance)
+            # 如果是，則必須按下 "e" 鍵關閉背包
+            print("正在檢查 B 時間點的顏色是否接近 A...")
+            if pyautogui.pixelMatchesColor(target_x, target_y, variable_A, tolerance=10):
+                pyautogui.press('e')
 
             check_exit()
-            print("4. 輸入 '/'")
+            print("3. 輸入 '/'")
             pyautogui.press('/')
 
             check_exit()
-            print("5. 輸入 'moneysave'")
+            print("4. 輸入 'moneysave'")
             pyautogui.press('m')
             pyautogui.press('o')
             pyautogui.press('n')
@@ -75,9 +90,13 @@ def run_script():
             pyautogui.press('e')
 
             check_exit()
-            print("6. 按下 'Enter'")
+            print("5. 按下 'Enter'")
             pyautogui.press('enter')
-            safe_sleep(0.1)
+            time.sleep(0.1)
+
+            print("正在記錄 B 時間點的顏色...")
+            variable_B = pyautogui.pixel(target_x, target_y)
+            print(f"變數 B (RGB): {variable_B}")
             
             safe_sleep(0.3)
 
